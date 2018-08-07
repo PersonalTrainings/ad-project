@@ -28,14 +28,15 @@ class Storage {
         const storageObj = JSON.parse(storage)
 
         if (storageObj.expired && (new Date(storageObj.expired) < Date.now())) {
-          this.remove(name)
+          this.remove()
           return null
         }
 
         return storageObj.value
     }
 
-    remove (name) {
+    remove () {
+        const name = this.name
         this.type.removeItem(name)
         return this
     }
