@@ -69,7 +69,7 @@
                         password: this.password
                     }
 
-                    this.$store.dispatch('loginUser', user)
+                    this.$store.dispatch('authUser', user)
                         .then(() => this.$router.push('/'))
                         .catch(() => {})
                 }

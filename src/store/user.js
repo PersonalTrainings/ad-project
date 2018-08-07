@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import { UserToken } from '../storage'
 
 export default {
     state: {
@@ -6,40 +7,24 @@ export default {
     },
     mutations: {
         setUser (state, payload) {
-            const oneHour = 1 * 60 * 60 * 1000
-            const expirationDate = +(new Date(+oneHour + Date.now()))
-
-            localStorage.setItem('userToken', payload)
-            localStorage.setItem('expirationDate', expirationDate)
             state.user = payload
         },
         removeUser (state) {
-            localStorage.removeItem('userToken')
-            localStorage.removeItem('expirationDate')
             state.user = null
         }
     },
     actions: {
-        async registerUser ({commit}, {email, password}) {
+        async authUser ({commit}, {email, password, isSignup = false}) {
+            const method = isSignup ? 'createUserWithEmailAndPassword' : 'signInWithEmailAndPassword'
+            // one hour
+            const expirationDate = 1 * 60 * 60
+
             commit('clearError')
             commit('setLoading', true)
-
             try {
-                const { user: { uid } } = await firebase.auth().createUserWithEmailAndPassword(email, password)
-                commit('setUser', uid)
-                commit('setLoading', false)
-            } catch (err) {
-                commit('setLoading', false)
-                commit('setError', err.message)
-                throw err
-            }
-        },
-        async loginUser ({commit}, {email, password}) {
-            commit('clearError')
-            commit('setLoading', true)
+                const { user: { uid } } = await firebase.auth()[method](email, password)
+                UserToken.set(uid, expirationDate)
 
-            try {
-                const { user: { uid } } = await firebase.auth().signInWithEmailAndPassword(email, password)
                 commit('setUser', uid)
                 commit('setLoading', false)
             } catch (err) {
@@ -49,19 +34,14 @@ export default {
             }
         },
         authCheckState ({commit}) {
-            const token = localStorage.getItem('userToken')
-            if (!token) {
-                commit('removeUser')
-            } else {
-                const expirationDate = localStorage.getItem('expirationDate')
-                if (new Date(expirationDate) < Date.now()) {
-                    commit('removeUser')
-                } else {
-                    commit('setUser', token)
-                }
+            const token = UserToken.get()
+
+            if (token) {
+                commit('setUser', token)
             }
         },
         removeUser ({commit}) {
+            UserToken.remove()
             commit('removeUser')
         }
     },

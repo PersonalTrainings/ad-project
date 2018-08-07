@@ -79,9 +79,10 @@
                 if (this.$refs.form.validate()) {
                     const user = {
                         email: this.email,
-                        password: this.password
+                        password: this.password,
+                        isSignup: true
                     }
-                    this.$store.dispatch('registerUser', user)
+                    this.$store.dispatch('authUser', user)
                         .then(() => this.$router.push('/'))
                         .catch(() => {})
                 }
