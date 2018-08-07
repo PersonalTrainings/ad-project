@@ -33,7 +33,6 @@ new Vue({
     //         this.$store.dispatch('authCheckState', user)
     //     }
     // })
-
     this.$store.dispatch('fetchAds')
   }
 })
