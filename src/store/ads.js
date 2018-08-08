@@ -25,18 +25,28 @@ export default {
         }
     },
     actions: {
-        async createAd ({commit, getters}, {title, description, imageSrc, promo}) {
+        async createAd ({commit, getters}, {title, description, image, promo}) {
             commit('clearError')
             commit('setLoading', true)
             try {
-                const newAd = new Ad(title, description, getters.user, imageSrc, promo)
+                const newAd = new Ad(title, description, getters.user, '', promo)
                 const ad = await firebase.database().ref('ads').push(newAd)
+                const imageExt = image.name.slice(image.name.lastIndexOf('.'))
 
-                commit('setLoading', false)
-                commit('createAd', {
-                    ...newAd,
-                    id: ad.key
-                })
+                const metadata = { contentType: image.type }
+
+                // todo need to make all requests await
+                firebase.storage().ref(`ad/${ad.key}${imageExt}`).put(image, metadata)
+                    .then(fileData => fileData.ref.getDownloadURL())
+                    .then(async imageSrc => {
+                        await firebase.database().ref('ads').child(ad.key).update({imageSrc})
+                        commit('setLoading', false)
+                        commit('createAd', {
+                            ...newAd,
+                            id: ad.key,
+                            imageSrc
+                        })
+                    })
             } catch (err) {
                 commit('setLoading', false)
                 commit('setError', err.message)
