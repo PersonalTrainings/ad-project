@@ -35,7 +35,6 @@ export default {
 
                 const metadata = { contentType: image.type }
 
-                // todo need to make all requests await
                 const fileData = await firebase.storage().ref(`ad/${ad.key}${imageExt}`).put(image, metadata)
                 const imageSrc = await fileData.ref.getDownloadURL()
                 await firebase.database().ref('ads').child(ad.key).update({imageSrc})
