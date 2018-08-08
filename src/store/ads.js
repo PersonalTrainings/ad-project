@@ -36,17 +36,15 @@ export default {
                 const metadata = { contentType: image.type }
 
                 // todo need to make all requests await
-                firebase.storage().ref(`ad/${ad.key}${imageExt}`).put(image, metadata)
-                    .then(fileData => fileData.ref.getDownloadURL())
-                    .then(async imageSrc => {
-                        await firebase.database().ref('ads').child(ad.key).update({imageSrc})
-                        commit('setLoading', false)
-                        commit('createAd', {
-                            ...newAd,
-                            id: ad.key,
-                            imageSrc
-                        })
-                    })
+                const fileData = await firebase.storage().ref(`ad/${ad.key}${imageExt}`).put(image, metadata)
+                const imageSrc = await fileData.ref.getDownloadURL()
+                await firebase.database().ref('ads').child(ad.key).update({imageSrc})
+                commit('setLoading', false)
+                commit('createAd', {
+                    ...newAd,
+                    id: ad.key,
+                    imageSrc
+                })
             } catch (err) {
                 commit('setLoading', false)
                 commit('setError', err.message)
