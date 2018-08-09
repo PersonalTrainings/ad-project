@@ -1,9 +1,11 @@
 import store from '../store'
 
 export default function (to, from, next) {
-    if (store.getters.user) {
-        next()
-    } else {
-        next('/login?loginError=true')
-    }
+    setTimeout(() => {
+        if (store.getters.user) {
+            next()
+        } else {
+            next('/login?loginError=true')
+        }
+    }, 0)
 }
