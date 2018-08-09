@@ -22,8 +22,7 @@ export default {
     actions: {
         async authUser ({commit}, {email, password, isSignup = false}) {
             const method = isSignup ? 'createUserWithEmailAndPassword' : 'signInWithEmailAndPassword'
-            // one hour
-            const expirationDate = 1 * 60 * 60
+            const expirationDate = 10 * 60
 
             commit('clearError')
             commit('setLoading', true)

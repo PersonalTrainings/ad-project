@@ -47,9 +47,7 @@ const store = {
 }
 
 const nameMap = {
-    USER_TOKEN: '1',
-    USER_ID: '2'
+    USER_TOKEN: '1'
 }
 
 export const UserToken = new Storage(store.storage, nameMap.USER_TOKEN)
-export const UserId = new Storage(store.storage, nameMap.USER_ID)
