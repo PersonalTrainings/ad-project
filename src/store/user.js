@@ -1,6 +1,12 @@
 import * as firebase from 'firebase'
 import { UserToken } from '../storage'
 
+class User {
+    constructor (id) {
+        this.id = id
+    }
+}
+
 export default {
     state: {
         user: null
@@ -23,9 +29,10 @@ export default {
             commit('setLoading', true)
             try {
                 const { user: { uid } } = await firebase.auth()[method](email, password)
-                UserToken.set(uid, expirationDate)
+                const user = new User(uid)
+                UserToken.set(user, expirationDate)
 
-                commit('setUser', uid)
+                commit('setUser', user)
                 commit('setLoading', false)
             } catch (err) {
                 commit('setLoading', false)
