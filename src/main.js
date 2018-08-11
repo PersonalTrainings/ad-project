@@ -7,7 +7,11 @@ import BuyModalComponent from '@/components/Shared/BuyModal'
 import * as firebase from 'firebase'
 import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+    theme: {
+        error: '#DD2C00'
+    }
+})
 Vue.component('app-buy-modal', BuyModalComponent)
 Vue.config.productionTip = false
 
