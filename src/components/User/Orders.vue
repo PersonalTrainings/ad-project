@@ -44,8 +44,8 @@
                 </v-list-tile>
             </v-list>
         </v-flex>
-        <v-flex xs12 class="text--secondary" v-else>
-            <h1>You have no orders</h1>
+        <v-flex xs12 class="text-xs-center" v-else>
+            <h1 class="text--primary">You have no orders</h1>
         </v-flex>
     </v-layout>
   </v-container>
