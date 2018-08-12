@@ -5,6 +5,7 @@ import store from './store'
 import Vuetify from 'vuetify'
 import BuyModalComponent from '@/components/Shared/BuyModal'
 import * as firebase from 'firebase'
+import FirebaseConfig from '../config/config.json'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuetify, {
@@ -23,14 +24,7 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    firebase.initializeApp({
-        apiKey: 'AIzaSyByuH0X8m5j6LxvDzsVaUZcaI4DFW6iTlk',
-        authDomain: 'itc-ads-59d3a.firebaseapp.com',
-        databaseURL: 'https://itc-ads-59d3a.firebaseio.com',
-        projectId: 'itc-ads-59d3a',
-        storageBucket: 'itc-ads-59d3a.appspot.com',
-        messagingSenderId: '160935180786'
-    })
+    firebase.initializeApp(FirebaseConfig)
     // get user from local storage
 
     // firebase.auth().onAuthStateChanged(user => {
